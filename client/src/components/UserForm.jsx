@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import UserTable from "./UserTable";
 import API from "../../services/api";
 import toast from "react-hot-toast";
 

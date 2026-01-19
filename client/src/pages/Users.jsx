@@ -2,9 +2,12 @@ import React, { useState, useEffect } from "react";
 import UserForm from "../components/UserForm";
 import API from "../../services/api";
 import UserTable from "../components/UserTable";
+import EditUserModal from "../components/EditUserModal";
 
 const Users = () => {
   const [users, setUsers] = useState([]);
+  const [editingUser, setEditingUser] = useState(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const getAllUsers = async () => {
     try {
       const response = await API.get("/");
@@ -25,7 +28,21 @@ const Users = () => {
             User Management
           </h1>
           <UserForm setUsers={setUsers} />
-          <UserTable users={users} setUsers={setUsers} />
+          <UserTable
+            users={users}
+            setUsers={setUsers}
+            setEditingUser={setEditingUser}
+            setIsEditModalOpen={setIsEditModalOpen}
+          />
+
+          {isEditModalOpen && editingUser && (
+            <EditUserModal
+              editingUser={editingUser}
+              setEditingUser={setEditingUser}
+              setIsEditModalOpen={setIsEditModalOpen}
+              setUsers={setUsers}
+            />
+          )}
         </div>
       </div>
     </>

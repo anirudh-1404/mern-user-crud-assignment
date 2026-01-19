@@ -3,7 +3,7 @@ import API from "../../services/api";
 import { useParams } from "react-router-dom";
 import toast from "react-hot-toast";
 
-const UserTable = ({ users, setUsers }) => {
+const UserTable = ({ users, setUsers, setEditingUser, setIsEditModalOpen }) => {
   const deleteUser = async (id) => {
     try {
       const response = await API.delete(`/delete/${id}`);
@@ -55,7 +55,13 @@ const UserTable = ({ users, setUsers }) => {
                         {user.age}
                       </td>
                       <td className="px-4 py-3 border-b text-slate-700">
-                        <button className="rounded-md text-white text-sm bg-amber-500 hover:bg-amber-600 transition px-3 py-1 mr-5">
+                        <button
+                          onClick={() => {
+                            setEditingUser(user);
+                            setIsEditModalOpen(true);
+                          }}
+                          className="bg-amber-500 text-white px-3 py-1 rounded-md mr-4"
+                        >
                           Edit
                         </button>
                         <button

@@ -10,6 +10,14 @@ export const createUser = async (req, res, next) => {
       });
     }
 
+    const isUserExists = await User.findOne({ email });
+
+    if (isUserExists) {
+      return res.status(403).json({
+        message: "User already exists!",
+      });
+    }
+
     const user = await User.create({
       name,
       email,

@@ -1,6 +1,23 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import API from "../../services/api";
 
 const UserTable = () => {
+  const [showUsers, setShowUsers] = useState([]);
+
+  const getAllUsers = async () => {
+    try {
+      const response = await API.get("/");
+      // console.log(response.data);
+      setShowUsers(response.data.data);
+    } catch (err) {
+      console.log("Something went wrong!", err.message);
+    }
+  };
+
+  useEffect(() => {
+    getAllUsers();
+  }, []);
+
   return (
     <>
       <div className="overflow-x-auto rounded-xl border border-slate-200">
@@ -23,19 +40,31 @@ const UserTable = () => {
           </thead>
 
           <tbody>
-            <tr className="hover:bg-slate-50 transition">
-              <td className="px-4 py-3 border-b text-slate-700">User name</td>
-              <td className="px-4 py-3 border-b text-slate-700">User email</td>
-              <td className="px-4 py-3 border-b text-slate-700">User age</td>
-              <td className="px-4 py-3 border-b text-slate-700">
-                <button className="rounded-md text-white text-sm bg-amber-500 hover:bg-amber-600 transition px-3 py-1 mr-5">
-                  Edit
-                </button>
-                <button className="bg-red-600 text-white px-3 py-1 rounded-md text-sm hover:bg-red-700">
-                  Delete
-                </button>
-              </td>
-            </tr>
+            {showUsers.map((user) => {
+              return (
+                <>
+                  <tr className="hover:bg-slate-50 transition" key={user._id}>
+                    <td className="px-4 py-3 border-b text-slate-700">
+                      {user.name}
+                    </td>
+                    <td className="px-4 py-3 border-b text-slate-700">
+                      {user.email}
+                    </td>
+                    <td className="px-4 py-3 border-b text-slate-700">
+                      {user.age}
+                    </td>
+                    <td className="px-4 py-3 border-b text-slate-700">
+                      <button className="rounded-md text-white text-sm bg-amber-500 hover:bg-amber-600 transition px-3 py-1 mr-5">
+                        Edit
+                      </button>
+                      <button className="bg-red-600 text-white px-3 py-1 rounded-md text-sm hover:bg-red-700">
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                </>
+              );
+            })}
           </tbody>
         </table>
       </div>

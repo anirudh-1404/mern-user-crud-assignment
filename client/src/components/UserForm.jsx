@@ -3,7 +3,7 @@ import UserTable from "./UserTable";
 import API from "../../services/api";
 import toast from "react-hot-toast";
 
-const UserForm = () => {
+const UserForm = ({ setUsers }) => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -22,7 +22,7 @@ const UserForm = () => {
       const response = await API.post("/create", data);
       if (response.status === 201) {
         toast.success(response.data.message);
-        setFormData(response.data.data);
+        setUsers((prev) => [response.data.data, ...prev]);
       }
     } catch (err) {
       console.log("Something went wrong!", err.message);
@@ -33,6 +33,7 @@ const UserForm = () => {
     e.preventDefault();
 
     createUser(formData);
+    setFormData({ name: "", email: "", age: "" });
   };
 
   return (
@@ -70,8 +71,6 @@ const UserForm = () => {
           Add
         </button>
       </form>
-
-      <UserTable />
     </>
   );
 };

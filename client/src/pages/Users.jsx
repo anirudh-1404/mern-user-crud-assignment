@@ -1,7 +1,22 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import UserForm from "../components/UserForm";
+import API from "../../services/api";
+import UserTable from "../components/UserTable";
 
 const Users = () => {
+  const [users, setUsers] = useState([]);
+  const getAllUsers = async () => {
+    try {
+      const response = await API.get("/");
+      setUsers(response.data.data);
+    } catch (err) {
+      console.log("Something went wrong!", err.message);
+    }
+  };
+
+  useEffect(() => {
+    getAllUsers();
+  }, []);
   return (
     <>
       <div className="min-h-screen bg-slate-100 flex items-center justify-center p-6">
@@ -9,7 +24,8 @@ const Users = () => {
           <h1 className="text-3xl font-bold text-slate-800 mb-8">
             User Management
           </h1>
-          <UserForm />
+          <UserForm setUsers={setUsers} />
+          <UserTable users={users} setUsers={setUsers} />
         </div>
       </div>
     </>

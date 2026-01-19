@@ -3,37 +3,22 @@ import API from "../../services/api";
 import { useParams } from "react-router-dom";
 import toast from "react-hot-toast";
 
-const UserTable = () => {
-  const [showUsers, setShowUsers] = useState([]);
-
-  const getAllUsers = async () => {
-    try {
-      const response = await API.get("/");
-      setShowUsers(response.data.data);
-    } catch (err) {
-      console.log("Something went wrong!", err.message);
-    }
-  };
-
+const UserTable = ({ users, setUsers }) => {
   const deleteUser = async (id) => {
     try {
       const response = await API.delete(`/delete/${id}`);
       if (response.status === 200) {
         toast.success(response.data.message || "User deleted successfully!");
-        getAllUsers();
+        setUsers((prev) => prev.filter((u) => u._id !== id));
       }
     } catch (err) {
       console.log("Something went wrong!", err.message);
     }
   };
 
-  useEffect(() => {
-    getAllUsers();
-  }, []);
-
   return (
     <>
-      {showUsers.length === 0 ? (
+      {users.length === 0 ? (
         <p className="text-center text-slate-500 py-6">No users found</p>
       ) : (
         <div className="overflow-x-auto rounded-xl border border-slate-200">
@@ -56,7 +41,7 @@ const UserTable = () => {
             </thead>
 
             <tbody>
-              {showUsers.map((user) => {
+              {users.map((user) => {
                 return (
                   <>
                     <tr className="hover:bg-slate-50 transition" key={user._id}>

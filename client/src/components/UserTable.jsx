@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import API from "../../services/api";
+import { useParams } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const UserTable = () => {
   const [showUsers, setShowUsers] = useState([]);
@@ -7,8 +9,19 @@ const UserTable = () => {
   const getAllUsers = async () => {
     try {
       const response = await API.get("/");
-      // console.log(response.data);
       setShowUsers(response.data.data);
+    } catch (err) {
+      console.log("Something went wrong!", err.message);
+    }
+  };
+
+  const deleteUser = async (id) => {
+    try {
+      const response = await API.delete(`/delete/${id}`);
+      if (response.status === 200) {
+        toast.success(response.data.message || "User deleted successfully!");
+        getAllUsers();
+      }
     } catch (err) {
       console.log("Something went wrong!", err.message);
     }
@@ -60,7 +73,10 @@ const UserTable = () => {
                         <button className="rounded-md text-white text-sm bg-amber-500 hover:bg-amber-600 transition px-3 py-1 mr-5">
                           Edit
                         </button>
-                        <button className="bg-red-600 text-white px-3 py-1 rounded-md text-sm hover:bg-red-700">
+                        <button
+                          className="bg-red-600 text-white px-3 py-1 rounded-md text-sm hover:bg-red-700"
+                          onClick={() => deleteUser(user._id)}
+                        >
                           Delete
                         </button>
                       </td>

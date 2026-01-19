@@ -1,8 +1,13 @@
 import React from "react";
 import "./index.css";
+import Users from "./pages/Users";
 
 const App = () => {
-  return <div>App</div>;
+  return (
+    <>
+      <Users />
+    </>
+  );
 };
 
 export default App;
